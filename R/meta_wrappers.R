@@ -18,7 +18,7 @@ meta_string <- function(
     varname = varname,
     label = label,
     tags = tags
-  ) |>
+  ) %>%
   add_meta_class()
 }
 
@@ -47,7 +47,7 @@ meta_number <- function(
     digits = digits,
     locale = locale,
     log = log
-  ) |>
+  ) %>%
   add_meta_class()
 }
 
@@ -74,7 +74,7 @@ meta_currency <- function(
     tags = tags,
     code = code,
     log = log
-  ) |>
+  ) %>%
   add_meta_class()
 }
 
@@ -96,7 +96,7 @@ meta_factor <- function(
     label = label,
     tags = tags,
     levels = levels
-  ) |>
+  ) %>%
   add_meta_class()
 }
 
@@ -113,7 +113,7 @@ meta_date <- function(
     varname = varname,
     label = label,
     tags = tags
-  ) |>
+  ) %>%
   add_meta_class()
 }
 
@@ -130,7 +130,7 @@ meta_datetime <- function(
     varname = varname,
     label = label,
     tags = tags
-  ) |>
+  ) %>%
   add_meta_class()
 }
 
@@ -155,7 +155,7 @@ meta_geo <- function(
     tags = tags,
     latvar = latvar,
     longvar = longvar
-  ) |>
+  ) %>%
   add_meta_class()
 }
 
@@ -192,7 +192,7 @@ meta_graph <- function(
     linkidvarname = linkidvarname,
     labelvarname = labelvarname,
     direction = direction
-  ) |>
+  ) %>%
   add_meta_class()
 }
 
@@ -209,6 +209,6 @@ meta_href <- function(
     varname = varname,
     label = label,
     tags = tags
-  ) |>
+  ) %>%
   add_meta_class()
 }

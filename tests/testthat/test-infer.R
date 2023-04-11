@@ -20,7 +20,7 @@ attr(dat$date2, "label") <- "test date label with label attribute"
 # dat$bad <- hms::as_hms(1)
 
 suppressMessages(
-  x <- as_trelliscope_df(dat, name = "test") |>
+  x <- as_trelliscope_df(dat, name = "test") %>%
     add_meta_labels(id = "test id label with add_meta_labels")
 )
 xo <- get_trobj(x)
@@ -29,25 +29,25 @@ test_that2("infer", {
   expect_message(
     infer(x),
     regexp = "No default \"layout\" state supplied"
-  ) |> suppressMessages()
+  ) %>% suppressMessages()
 
   expect_message(
     infer(x),
     regexp = "No default \"labels\" state supplied"
-  ) |> suppressMessages()
+  ) %>% suppressMessages()
 
-  b <- x |>
+  b <- x %>%
     add_view(name = "view 1")
 
   expect_message(
     a <- infer(b),
     regexp = "No default \"layout\" state supplied for view"
-  ) |> suppressMessages()
+  ) %>% suppressMessages()
 
   expect_message(
     infer(b),
     regexp = "No default \"labels\" state supplied for view"
-  ) |> suppressMessages()
+  ) %>% suppressMessages()
 
   ao <- get_trobj(a)
   bo <- get_trobj(b)
@@ -70,18 +70,18 @@ test_that2("infer", {
 })
 
 test_that2("meta variable inference", {
-  b <- x |>
+  b <- x %>%
     add_meta_def(meta_string("letters", label = "test label with meta_string"))
 
   # expect_message(
   #   d <- infer_meta(b),
   #   regexp = "Cannot find a data type for variable"
-  # ) |> suppressMessages()
+  # ) %>% suppressMessages()
 
   expect_message(
     d <- infer_meta(b),
     regexp = "Meta definitions inferred"
-  ) |> suppressMessages()
+  ) %>% suppressMessages()
 
   bo <- get_trobj(b)
   dob <- get_trobj(d)

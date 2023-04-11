@@ -99,7 +99,7 @@ print_meta_info_df <- function(metas, df, meta_labels, meta_tags) {
         label = lbl,
         tags = tags
       )
-    }) |>
+    }) %>%
     dplyr::bind_rows()
 
     cli::cli_bullets(c("*" = "Defined metadata variables:"))

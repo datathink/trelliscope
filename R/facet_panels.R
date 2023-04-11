@@ -137,11 +137,11 @@ nest_panels <- function(
 
   unnest_cols2 <- c(facet_cols, unnest_cols)
   # group by all the facets
-  data <- data |>
-    dplyr::ungroup() |>
-    # dplyr::mutate(.id = row_number()) |>
-    dplyr::mutate(.id = seq_len(nrow(data))) |>
-    tidyr::nest({{ data_col }} := !dplyr::all_of(unnest_cols2)) |>
+  data <- data %>%
+    dplyr::ungroup() %>%
+    # dplyr::mutate(.id = row_number()) %>%
+    dplyr::mutate(.id = seq_len(nrow(data))) %>%
+    tidyr::nest({{ data_col }} := !dplyr::all_of(unnest_cols2)) %>%
     dplyr::ungroup()
 
   if (!is.null(unnest_cols)) {
@@ -369,8 +369,8 @@ add_range_info_to_scales <- function(plot, scales_info, facet_cols) {
 plot_clone <- utils::getFromNamespace("plot_clone", "ggplot2")
 
 add_trelliscope_scales <- function(p, scales_info, ...) {
-  p |>
-    add_trelliscope_scale(scales_info$x_info$name, scales_info$x_info, ...) |>
+  p %>%
+    add_trelliscope_scale(scales_info$x_info$name, scales_info$x_info, ...) %>%
     add_trelliscope_scale(scales_info$y_info$name, scales_info$y_info, ...)
 }
 
@@ -449,10 +449,10 @@ add_trelliscope_scale <- function(
 
       } else if (scale_type == "sliced") {
         if (packageVersion("ggplot2") > "2.2.1") {
-          dt_range <- rlang::eval_tidy(p$mapping[[axis_name]], data = p$data) |>
+          dt_range <- rlang::eval_tidy(p$mapping[[axis_name]], data = p$data) %>%
             range(na.rm = TRUE)
         } else {
-          dt_range <- eval(p$mapping[[axis_name]], envir = p$data) |>
+          dt_range <- eval(p$mapping[[axis_name]], envir = p$data) %>%
             range(na.rm = TRUE)
         }
 

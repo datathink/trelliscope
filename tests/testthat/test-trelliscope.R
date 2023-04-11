@@ -1,5 +1,5 @@
-dat <- ggplot2::mpg |>
-  tidyr::nest(data = !dplyr::one_of(c("manufacturer", "class"))) |>
+dat <- ggplot2::mpg %>%
+  tidyr::nest(data = !dplyr::one_of(c("manufacturer", "class"))) %>%
   dplyr::mutate(panel = map_plot(data, ~
     (ggplot2::ggplot(aes(hwy, cty), data = .x) + ggplot2::geom_point())
   ))
@@ -40,13 +40,13 @@ test_that2("trelliscope instantiation", {
 test_that2("trelliscope printing", {
   disp <- (ggplot(aes(hwy, cty), data = mpg2) +
     geom_point() +
-    facet_panels(~ class)) |>
-    nest_panels() |>
+    facet_panels(~ class)) %>%
+    nest_panels() %>%
     mutate(
       mean_cty = purrr::map_dbl(data, ~ mean(.x$cty)),
       min_cty = purrr::map_dbl(data, ~ min(.x$cty)),
       wiki_link = paste0("https://en.wikipedia.org/wiki/", class)
-    ) |>
+    ) %>%
     as_trelliscope_df(name = "mpg", path = plotdir)
 
   suppressMessages(expect_message(
@@ -54,14 +54,14 @@ test_that2("trelliscope printing", {
     "Panels written: no"
   ))
 
-  disp <- disp |>
+  disp <- disp %>%
     write_panels(width = 800, height = 500, format = "svg")
   suppressMessages(expect_message(
     show_info(disp),
     "Panels written: yes"
   ))
 
-  disp <- disp |>
+  disp <- disp %>%
     add_meta_defs(
       meta_number("mean_cty",
         label = "Mean of city miles per gallon",
@@ -73,7 +73,7 @@ test_that2("trelliscope printing", {
     "Defined metadata variables"
   ))
 
-  disp <- disp |>
+  disp <- disp %>%
     add_meta_labels(
       min_cty = "Lowest observed city miles per gallon"
     )
@@ -88,29 +88,29 @@ test_that2("trelliscope printing", {
 # - Make sure it is set even when not calling write_trelliscope or panels already written
 
 # TODO: once print method reflects this info, test it
-# disp <- disp |>
+# disp <- disp %>%
 #   set_default_labels(c("class", "mean_cty"))
 
-# disp <- disp |>
+# disp <- disp %>%
 #   set_default_layout(ncol = 5)
 
-# disp <- disp |>
+# disp <- disp %>%
 #   set_default_sort(c("class", "mean_cty"), dir = c("asc", "desc"))
 
-# disp <- disp |>
+# disp <- disp %>%
 #   set_default_filters(
 #     filter_string("class", values = "compact"),
 #     filter_range("mean_cty", max = 22)
 #   )
 
-# disp <- disp |>
+# disp <- disp %>%
 #   add_view(
 #     name = "Classes that have vehicles with less than 20 city mpg",
 #     filter_range("min_cty", max = 20),
 #     state_sort("min_cty", dir = "desc")
 #   )
 
-# disp <- disp |>
+# disp <- disp %>%
 #   add_inputs(
 #     input_text(name = "comments", label = "Comments about this panel",
 #       width = 100, height = 6),

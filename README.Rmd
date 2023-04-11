@@ -70,8 +70,8 @@ suppressPackageStartupMessages(
   library(tidyverse, warn.conflicts = FALSE) # for ggplot2, tidyr, dplyr, purrr
 )
 
-visdf <- gapminder |>
-  tidyr::nest(data = !dplyr::one_of(c("continent", "country"))) |>
+visdf <- gapminder %>%
+  tidyr::nest(data = !dplyr::one_of(c("continent", "country"))) %>%
   dplyr::mutate(
     mean_lifeexp = purrr::map_dbl(data, ~ mean(.x$lifeExp)),
     panel = trelliscope::map_plot(data,
@@ -94,7 +94,7 @@ Note that although the tidyverse provides many helpful functions, it does not ma
 Once you have data in this form, you can create a Trelliscope display by simply doing the following:
 
 ```{r eval=FALSE}
-as_trelliscope_df(visdf, name = "life expectancy") |> write_trelliscope()
+as_trelliscope_df(visdf, name = "life expectancy") %>% write_trelliscope()
 ```
 
 Passing the data frame to `as_trelliscope_df()` creates a trelliscope data frame that provides information about the display that will be created from the data frame, such the name of the display and an optional description and tags, as well as the directory where the dispay will be written (if not specified it is placed in a temporary directory). Then `write_trelliscope()` writes out and shows the display using the Trelliscope JavaScript viewer app.
@@ -108,11 +108,11 @@ From this you can see how it can be useful to provide as much metadata about eac
 There are many functions provided that operate on the object that comes out of `as_trelliscope_df()` that allow us to specify more information about the display and its behavior before we write it out with `write_trelliscope()`. We will discuss several of these later.
 
 ```{r echo=FALSE, eval=FALSE}
-gapminder |>
-  filter(continent == "Africa") |>
-  group_by(country) |>
-  summarise(mn = mean(lifeExp)) |>
-  arrange(mn) |>
+gapminder %>%
+  filter(continent == "Africa") %>%
+  group_by(country) %>%
+  summarise(mn = mean(lifeExp)) %>%
+  arrange(mn) %>%
   print(n = 52)
 ```
 
@@ -165,27 +165,27 @@ So far we have seen the following general set of steps to create a trelliscope d
 Starting with a data frame of raw data, `df`, we can create a data frame of visualizations using tidyverse functions:
 
 ```r
-df |>
-  nest(...) |>
+df %>%
+  nest(...) %>%
   mutate(
     panel = map_plot(...),
     ...
-  ) |>
-  as_trelliscope_df(...) |>
+  ) %>%
+  as_trelliscope_df(...) %>%
   write_trelliscope(...)
 ```
 
 or using `facet_panels()`:
 
 ```r
-df |>
-  (ggplot(...) + ... + facet_panels()) |>
-  nest_panels() |>
-  as_trelliscope_df() |>
+df %>%
+  (ggplot(...) + ... + facet_panels()) %>%
+  nest_panels() %>%
+  as_trelliscope_df() %>%
   write_trelliscope()
 ```
 
-In between `as_trelliscope_df() |> write_trelliscope()`, there are many functions we can call that give us better control over how our display looks and behaves. These include the following:
+In between `as_trelliscope_df() %>% write_trelliscope()`, there are many functions we can call that give us better control over how our display looks and behaves. These include the following:
 
 - `write_panels()`: allows finer control over how panels are written (e.g. plot dimensions, file format, etc.)
 - `add_meta_defs()`: specify metadata variable definitions (e.g. plain text variable descriptions, types, tags)
@@ -201,14 +201,14 @@ To illustrate some of these, let's create a trelliscope data frame:
 ```{r}
 x <- (ggplot(aes(year, lifeExp), data = gapminder) +
   geom_point() +
-  facet_panels(~ continent + country)) |>
-  nest_panels() |>
+  facet_panels(~ continent + country)) %>%
+  nest_panels() %>%
   mutate(
     mean_lifeexp = purrr::map_dbl(data, ~ mean(.x$lifeExp)),
     min_lifeexp = purrr::map_dbl(data, ~ min(.x$lifeExp)),
     mean_gdp = purrr::map_dbl(data, ~ mean(.x$gdpPercap)),
     wiki_link = paste0("https://en.wikipedia.org/wiki/", country)
-  ) |>
+  ) %>%
   as_trelliscope_df(name = "life expectancy")
 
 x
@@ -228,7 +228,7 @@ The main arguments are `width`, `height`, and `format`. The `width` and `height`
 
 The file format can be either `png` or `svg`. This is ignored if the plot column of the data frame is an htmlwidget such as a ggplotly plot.
 
-disp <- disp |>
+disp <- disp %>%
   write_panels(width = 800, height = 500, format = "svg")
 
 Once the panels are written, a note is made in the `disp` object so that it knows it doesn't have to be done with writing out the display. -->
@@ -254,7 +254,7 @@ Each metadata variable can be specified by using a helper function that specifie
 We can provide these specifications by calling `add_meta_defs()` on our trelliscope data frame. This function takes as arguments any number of `meta_*()` function calls. For example, let's build up our object to include some of these metadata variable specifications:
 
 ```{r}
-x <- x |>
+x <- x %>%
   add_meta_defs(
     meta_number("mean_gdp",
       label = "Mean of annual GDP per capita (US$, inflation-adjusted)",
@@ -272,7 +272,7 @@ If metadata variable definitions are not provided (such as here where we don't p
 Often the metadata inference works well enough that we might just want to provide labels for our metadata variables and skip the more formal metadata variable definition. We can do this with `add_meta_labels()`. This function simply takes a named set of parameters as input, with the names indicating the variable name and the values indicating the labels. For example:
 
 ```{r}
-x <- x |>
+x <- x %>%
   add_meta_labels(
     mean_lifeexp = "Mean of annual life expectancies",
     min_lifeexp = "Lowest observed annual life expectancy"
@@ -288,7 +288,7 @@ We still haven't specified labels for `country` and `continent`. If labels are n
 By default, the "key columns" will be shown as labels. If we'd like to change what labels are shown when the display is opened, we can use `set_default_labels()`, e.g.:
 
 ```{r}
-x <- x |>
+x <- x %>%
   set_default_labels(c("country", "continent", "wiki_link"))
 ```
 
@@ -297,7 +297,7 @@ x <- x |>
 We can also set the default panel layout:
 
 ```{r}
-x <- x |>
+x <- x %>%
   set_default_layout(ncol = 5)
 ```
 
@@ -306,7 +306,7 @@ x <- x |>
 We can set the default sort order with `set_default_sort()`:
 
 ```{r}
-x <- x |>
+x <- x %>%
   set_default_sort(c("continent", "mean_lifeexp"), dir = c("asc", "desc"))
 ```
 
@@ -318,7 +318,7 @@ We can set the default filter state with `set_default_filters()`. Currently ther
 - `filter_string(varname, values = ...)`: works with factor or string variables
 
 ```{r}
-x <- x |>
+x <- x %>%
   set_default_filters(
     filter_string("continent", values = "Africa"),
     filter_range("mean_lifeexp", max = 50)
@@ -344,7 +344,7 @@ The `state_*()` functions have the same parameters as and behave similarly to th
 For example, suppose we wish to add a view that only shows countries with minimum life expectancy greater than or equal to 60, sorted from highest to lowest minimum life expectancy:
 
 ```{r}
-x <- x |>
+x <- x %>%
   add_view(
     name = "Countries with high life expectancy (min >= 60)",
     filter_range("min_lifeexp", min = 60),
@@ -370,13 +370,13 @@ These specify different input types.
 For example, if we want a free text input for comments as well as yes/no question asking if the data looks correct for the panel, we can do the following:
 
 ```{r}
-x <- x |>
+x <- x %>%
   add_inputs(
     input_text(name = "comments", label = "Comments about this panel",
       width = 100, height = 6),
     input_radio(name = "looks_correct",
       label = "Does the data look correct?", options = c("no", "yes"))
-  ) |>
+  ) %>%
   add_input_email("johndoe123@fakemail.net")
 ```
 
@@ -401,5 +401,5 @@ This writes the panels if they haven't been written yet, and then writes out a J
 To see what the JSON representation of this looks like for the display we have been building:
 
 ```{r}
-x |> as_json()
+x %>% as_json()
 ```

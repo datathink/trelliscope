@@ -94,8 +94,8 @@ suppressPackageStartupMessages(
   library(tidyverse, warn.conflicts = FALSE) # for ggplot2, tidyr, dplyr, purrr
 )
 
-visdf <- gapminder |>
-  tidyr::nest(data = !dplyr::one_of(c("continent", "country"))) |>
+visdf <- gapminder %>%
+  tidyr::nest(data = !dplyr::one_of(c("continent", "country"))) %>%
   dplyr::mutate(
     mean_lifeexp = purrr::map_dbl(data, ~ mean(.x$lifeExp)),
     panel = trelliscope::map_plot(data,
@@ -152,7 +152,7 @@ Once you have data in this form, you can create a Trelliscope display by
 simply doing the following:
 
 ``` r
-as_trelliscope_df(visdf, name = "life expectancy") |> write_trelliscope()
+as_trelliscope_df(visdf, name = "life expectancy") %>% write_trelliscope()
 ```
 
 Passing the data frame to `as_trelliscope_df()` creates a trelliscope
@@ -295,27 +295,27 @@ Starting with a data frame of raw data, `df`, we can create a data frame
 of visualizations using tidyverse functions:
 
 ``` r
-df |>
-  nest(...) |>
+df %>%
+  nest(...) %>%
   mutate(
     panel = map_plot(...),
     ...
-  ) |>
-  as_trelliscope_df(...) |>
+  ) %>%
+  as_trelliscope_df(...) %>%
   write_trelliscope(...)
 ```
 
 or using `facet_panels()`:
 
 ``` r
-df |>
-  (ggplot(...) + ... + facet_panels()) |>
-  nest_panels() |>
-  as_trelliscope_df() |>
+df %>%
+  (ggplot(...) + ... + facet_panels()) %>%
+  nest_panels() %>%
+  as_trelliscope_df() %>%
   write_trelliscope()
 ```
 
-In between `as_trelliscope_df() |> write_trelliscope()`, there are many
+In between `as_trelliscope_df() %>% write_trelliscope()`, there are many
 functions we can call that give us better control over how our display
 looks and behaves. These include the following:
 
@@ -343,14 +343,14 @@ To illustrate some of these, let’s create a trelliscope data frame:
 ``` r
 x <- (ggplot(aes(year, lifeExp), data = gapminder) +
   geom_point() +
-  facet_panels(~ continent + country)) |>
-  nest_panels() |>
+  facet_panels(~ continent + country)) %>%
+  nest_panels() %>%
   mutate(
     mean_lifeexp = purrr::map_dbl(data, ~ mean(.x$lifeExp)),
     min_lifeexp = purrr::map_dbl(data, ~ min(.x$lifeExp)),
     mean_gdp = purrr::map_dbl(data, ~ mean(.x$gdpPercap)),
     wiki_link = paste0("https://en.wikipedia.org/wiki/", country)
-  ) |>
+  ) %>%
   as_trelliscope_df(name = "life expectancy")
 
 x
@@ -408,7 +408,7 @@ The main arguments are `width`, `height`, and `format`. The `width` and `height`
 
 The file format can be either `png` or `svg`. This is ignored if the plot column of the data frame is an htmlwidget such as a ggplotly plot.
 
-disp <- disp |>
+disp <- disp %>%
   write_panels(width = 800, height = 500, format = "svg")
 
 Once the panels are written, a note is made in the `disp` object so that it knows it doesn't have to be done with writing out the display. -->
@@ -457,7 +457,7 @@ trelliscope data frame. This function takes as arguments any number of
 include some of these metadata variable specifications:
 
 ``` r
-x <- x |>
+x <- x %>%
   add_meta_defs(
     meta_number("mean_gdp",
       label = "Mean of annual GDP per capita (US$, inflation-adjusted)",
@@ -500,7 +500,7 @@ names indicating the variable name and the values indicating the labels.
 For example:
 
 ``` r
-x <- x |>
+x <- x %>%
   add_meta_labels(
     mean_lifeexp = "Mean of annual life expectancies",
     min_lifeexp = "Lowest observed annual life expectancy"
@@ -537,7 +537,7 @@ change what labels are shown when the display is opened, we can use
 `set_default_labels()`, e.g.:
 
 ``` r
-x <- x |>
+x <- x %>%
   set_default_labels(c("country", "continent", "wiki_link"))
 ```
 
@@ -546,7 +546,7 @@ x <- x |>
 We can also set the default panel layout:
 
 ``` r
-x <- x |>
+x <- x %>%
   set_default_layout(nrow = 3, ncol = 5)
 ```
 
@@ -555,7 +555,7 @@ x <- x |>
 We can set the default sort order with `set_default_sort()`:
 
 ``` r
-x <- x |>
+x <- x %>%
   set_default_sort(c("continent", "mean_lifeexp"), dir = c("asc", "desc"))
 ```
 
@@ -570,7 +570,7 @@ Currently there are two different kinds of filters:
     variables
 
 ``` r
-x <- x |>
+x <- x %>%
   set_default_filters(
     filter_string("continent", values = "Africa"),
     filter_range("mean_lifeexp", max = 50)
@@ -607,7 +607,7 @@ with minimum life expectancy greater than or equal to 60, sorted from
 highest to lowest minimum life expectancy:
 
 ``` r
-x <- x |>
+x <- x %>%
   add_view(
     name = "Countries with high life expectancy (min >= 60)",
     filter_range("min_lifeexp", min = 60),
@@ -638,13 +638,13 @@ question asking if the data looks correct for the panel, we can do the
 following:
 
 ``` r
-x <- x |>
+x <- x %>%
   add_inputs(
     input_text(name = "comments", label = "Comments about this panel",
       width = 100, height = 6),
     input_radio(name = "looks_correct",
       label = "Does the data look correct?", options = c("no", "yes"))
-  ) |>
+  ) %>%
   add_input_email("johndoe123@fakemail.net")
 ```
 
@@ -714,7 +714,7 @@ To see what the JSON representation of this looks like for the display
 we have been building:
 
 ``` r
-x |> as_json()
+x %>% as_json()
 #> ℹ Meta definitions inferred for variables "country", "continent",
 #>   "mean_lifeexp", and "min_lifeexp"
 #> ℹ No default "layout" state supplied for view 'Countries with high life

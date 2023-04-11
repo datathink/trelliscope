@@ -214,39 +214,39 @@ needs_log <- function(x) {
 # sapply(1:100, function(a) {
 #   x <- abs(rcauchy(1000))
 #   needs_log(x)
-# }) |> table()
+# }) %>% table()
 
 # sapply(1:100, function(a) {
 #   x <- abs(rnorm(1000))
 #   needs_log(x)
-# }) |> table()
+# }) %>% table()
 
 # sapply(1:100, function(a) {
 #   x <- rexp(1000)
 #   needs_log(x)
-# }) |> table()
+# }) %>% table()
 
 # sapply(1:100, function(a) {
 #   x <- runif(1000)
 #   needs_log(x)
-# }) |> table()
+# }) %>% table()
 
 # sapply(1:100, function(a) {
 #   x <- rweibull(1000, 0.5)
 #   needs_log(x)
-# }) |> table()
+# }) %>% table()
 
 # sapply(1:100, function(a) {
 #   x <- rweibull(1000, 1)
 #   needs_log(x)
-# }) |> table()
+# }) %>% table()
 
 # sapply(1:100, function(a) {
 #   x <- rweibull(1000, 0.75)
 #   needs_log(x)
-# }) |> table()
+# }) %>% table()
 
 # sapply(1:100, function(a) {
 #   x <- rweibull(1000, 0.6)
 #   needs_log(x)
-# }) |> table()
+# }) %>% table()

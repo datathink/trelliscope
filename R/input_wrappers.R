@@ -16,7 +16,7 @@ input_number <- function(
 ) {
   NumberInput$new(
     name = name, label = label, active = active, min = min, max = max
-  ) |>
+  ) %>%
     add_input_class()
 }
 
@@ -30,7 +30,7 @@ input_radio <- function(
 ) {
   RadioInput$new(
     name = name, label = label, active = active, options = options
-  ) |>
+  ) %>%
     add_input_class()
 }
 
@@ -44,7 +44,7 @@ input_checkbox <- function(
 ) {
   CheckboxInput$new(
     name = name, label = label, active = active, options = options
-  ) |>
+  ) %>%
     add_input_class()
 }
 
@@ -58,7 +58,7 @@ input_select <- function(
 ) {
   SelectInput$new(
     name = name, label = label, active = active, options = options
-  ) |>
+  ) %>%
     add_input_class()
 }
 
@@ -72,7 +72,7 @@ input_multiselect <- function(
 ) {
   MultiselectInput$new(
     name = name, label = label, active = active, options = options
-  ) |>
+  ) %>%
     add_input_class()
 }
 
@@ -87,6 +87,6 @@ input_text <- function(
 ) {
   TextInput$new(
     name = name, label = label, active = active, width = width, height = height
-  ) |>
+  ) %>%
     add_input_class()
 }

@@ -1,5 +1,5 @@
-dat <- ggplot2::mpg |>
-  tidyr::nest(data = !dplyr::one_of(c("manufacturer", "class"))) |>
+dat <- ggplot2::mpg %>%
+  tidyr::nest(data = !dplyr::one_of(c("manufacturer", "class"))) %>%
   dplyr::mutate(
     mean_cty = purrr::map_dbl(data, function(x) mean(x$cty)),
     panel = map_plot(data, ~
@@ -14,17 +14,17 @@ xo <- get_trobj(x)
 
 test_that2("add_meta_def", {
   expect_error(
-    list() |> add_meta_def(meta_string("test")),
+    list() %>% add_meta_def(meta_string("test")),
     regexp = "Expecting a trelliscope data frame"
   )
 
   expect_error(
-    b <- x |>
+    b <- x %>%
       add_meta_def(meta_string("manufacturr", "vehicle manufacturer")),
     regexp = "not find variable"
   )
 
-  b <- x |>
+  b <- x %>%
     add_meta_def(meta_string("manufacturer", "vehicle manufacturer"))
   bo <- get_trobj(b)
   expect_true("manufacturer" %in% names(bo$get("metas")))
@@ -33,14 +33,14 @@ test_that2("add_meta_def", {
   expect_length(xo$get("metas"), 0)
 
   expect_message(
-    b2 <- b |>
+    b2 <- b %>%
       add_meta_def(meta_string("manufacturer", "vehicle manufacturer")),
     regexp = "Replacing existing meta variable definition"
   )
 
   # see if log is inferred correctly
-  suppressMessages(b <- x |>
-    add_meta_def(meta_number("long_tail")) |>
+  suppressMessages(b <- x %>%
+    add_meta_def(meta_number("long_tail")) %>%
     add_meta_def(meta_number("mean_cty")))
   bo <- get_trobj(b)
 
@@ -51,7 +51,7 @@ test_that2("add_meta_def", {
 
 # if we don't specify factor levels, it will infer them
 test_that2("meta factor levels inference", {
-  b <- x |>
+  b <- x %>%
     add_meta_def(meta_factor("manufacturer", "vehicle manufacturer"))
   bo <- get_trobj(b)
   expect_equal(
@@ -59,7 +59,7 @@ test_that2("meta factor levels inference", {
     sort(unique(dat$manufacturer))
   )
 
-  b <- x |>
+  b <- x %>%
     add_meta_def(meta_factor("class2", "vehicle class (as factor)"))
   bo <- get_trobj(b)
   expect_equal(
@@ -70,18 +70,18 @@ test_that2("meta factor levels inference", {
 
 test_that2("add_meta_defs", {
   expect_error(
-    list() |> add_meta_defs(),
+    list() %>% add_meta_defs(),
     regexp = "Expecting a trelliscope data frame"
   )
 
-  b <- x |>
+  b <- x %>%
     add_meta_defs(
       meta_string("manufacturer", "vehicle manufacturer")
     )
   bo <- get_trobj(b)
   expect_length(bo$get("metas"), 1)
 
-  b <- x |>
+  b <- x %>%
     add_meta_defs(
       meta_string("manufacturer", "vehicle manufacturer"),
       meta_string("class", "vehicle class")
@@ -91,7 +91,7 @@ test_that2("add_meta_defs", {
   expect_true(all(c("manufacturer", "class") %in% names(bo$get("metas"))))
 
   expect_error(
-    b <- x |>
+    b <- x %>%
       add_meta_defs(meta_string("manufacturr", "vehicle manufacturer")),
     regexp = "not find variable"
   )
@@ -100,7 +100,7 @@ test_that2("add_meta_defs", {
   expect_length(xo$get("metas"), 0)
 
   expect_message(
-    b2 <- b |>
+    b2 <- b %>%
       add_meta_defs(meta_string("manufacturer", "vehicle manufacturer")),
     regexp = "Replacing existing meta variable definition"
   )
@@ -108,11 +108,11 @@ test_that2("add_meta_defs", {
 
 test_that2("add_meta_labels", {
   expect_error(
-    list() |> add_meta_defs(),
+    list() %>% add_meta_defs(),
     regexp = "Expecting a trelliscope data frame"
   )
 
-  b <- x |>
+  b <- x %>%
     add_meta_labels(manufacturer = "test manufacturer")
   bo <- get_trobj(b)
 
@@ -122,11 +122,11 @@ test_that2("add_meta_labels", {
 
 test_that2("set_default_layout", {
   expect_error(
-    list() |> set_default_layout(),
+    list() %>% set_default_layout(),
     regexp = "Expecting a trelliscope data frame"
   )
 
-  b <- x |>
+  b <- x %>%
     set_default_layout()
   bo <- get_trobj(b)
 
@@ -138,7 +138,7 @@ test_that2("set_default_layout", {
   expect_null(xo$get("state")$get("layout"))
 
   expect_message(
-    a <- b |>
+    a <- b %>%
       set_default_layout(ncol = 3),
     regexp = "Replacing existing layout state specification"
   )
@@ -150,11 +150,11 @@ test_that2("set_default_layout", {
 
 test_that2("set_default_labels", {
   expect_error(
-    list() |> set_default_labels("test"),
+    list() %>% set_default_labels("test"),
     regexp = "Expecting a trelliscope data frame"
   )
 
-  b <- x |>
+  b <- x %>%
     set_default_labels(varnames = "manufacturer")
   bo <- get_trobj(b)
 
@@ -167,7 +167,7 @@ test_that2("set_default_labels", {
   expect_null(xo$get("state")$get("labels"))
 
   expect_message(
-    a <- b |>
+    a <- b %>%
       set_default_labels(varnames = NULL),
     "Replacing existing labels state specification"
   )
@@ -181,17 +181,17 @@ test_that2("set_default_labels", {
 
 test_that2("set_default_sort", {
   expect_error(
-    list() |> set_default_sort("test"),
+    list() %>% set_default_sort("test"),
     regexp = "Expecting a trelliscope data frame"
   )
 
   expect_error(
-    b <- x |>
+    b <- x %>%
       set_default_sort(varnames = c("a", "b"), dirs = rep("asc", 3)),
     regexp = "must have same length"
   )
 
-  b <- x |>
+  b <- x %>%
     set_default_sort(varnames = c("manufacturer", "class"),
       dirs = c("asc", "desc"))
   bo <- get_trobj(b)
@@ -204,7 +204,7 @@ test_that2("set_default_sort", {
   expect_length(xo$get("state")$get("sort"), 0)
 
   expect_message(
-    a <- b |>
+    a <- b %>%
       set_default_sort(varnames = "manufacturer", dirs = "asc", add = TRUE),
     regexp = "Replacing existing sort state specification for variable"
   )
@@ -214,7 +214,7 @@ test_that2("set_default_sort", {
   expect_equal(names(ao$get("state")$get("sort"))[1], "class")
 
   expect_message(
-    b |>
+    b %>%
       set_default_sort(varnames = "manufacturer", dirs = "desc"),
     regexp = "Replacing entire existing sort"
   )
@@ -222,12 +222,12 @@ test_that2("set_default_sort", {
 
 test_that2("set_default_filters", {
   expect_error(
-    list() |> set_default_filters(),
+    list() %>% set_default_filters(),
     regexp = "Expecting a trelliscope data frame"
   )
 
   expect_error(
-    b <- x |>
+    b <- x %>%
       set_default_filters(
         filter_string("a", values = c("audi", "volkswagen"))
       ),
@@ -235,14 +235,14 @@ test_that2("set_default_filters", {
   )
 
   expect_error(
-    b <- x |>
+    b <- x %>%
       set_default_filters(
         filter_string("manufacturer", values = c("a", "b"))
       ),
     regexp = "could not find the value"
   )
 
-  b <- x |>
+  b <- x %>%
     set_default_filters(
       filter_string("manufacturer", values = c("audi", "volkswagen")),
       filter_range("mean_cty", min = 20)
@@ -257,7 +257,7 @@ test_that2("set_default_filters", {
   expect_length(xo$get("state")$get("filter"), 0)
 
   expect_message(
-    a <- b |>
+    a <- b %>%
       set_default_filters(
         filter_string("manufacturer", regexp = "for")
       ),
@@ -269,7 +269,7 @@ test_that2("set_default_filters", {
   expect_equal(names(ao$get("state")$get("filter"))[1], "mean_cty")
 
   expect_message(
-    b |>
+    b %>%
       set_default_filters(
         filter_string("manufacturer", regexp = "for"),
         add = FALSE
@@ -280,16 +280,16 @@ test_that2("set_default_filters", {
 
 test_that2("add_view", {
   expect_error(
-    list() |> add_view("test view", a = 1),
+    list() %>% add_view("test view", a = 1),
     regexp = "Expecting a trelliscope data frame"
   )
 
   expect_error(
-    x |> add_view("test view", a = 1),
+    x %>% add_view("test view", a = 1),
     regexp = "Expecting a trelliscope state definition"
   )
 
-  b <- x |>
+  b <- x %>%
     add_view(
       name = "test view",
       state_layout(ncol = 5),
@@ -307,22 +307,22 @@ test_that2("add_view", {
   expect_length(xo$get("views"), 0)
 
   expect_message(
-    x |> add_view(name = "test view", state_layout(), state_layout()),
+    x %>% add_view(name = "test view", state_layout(), state_layout()),
     "Multiple layout definitions"
-  ) |> suppressMessages()
+  ) %>% suppressMessages()
   expect_message(
-    x |> add_view(name = "test view", state_labels(), state_labels()),
+    x %>% add_view(name = "test view", state_labels(), state_labels()),
     "Multiple labels definitions"
-  ) |> suppressMessages()
+  ) %>% suppressMessages()
 
   expect_message(
-    b |> add_view("test view"),
+    b %>% add_view("test view"),
     regexp = "Overwriting view 'test view'"
-  ) |> suppressMessages()
+  ) %>% suppressMessages()
 })
 
 test_that2("input pipe functions", {
-  b <- x |>
+  b <- x %>%
     add_inputs(
       input_radio(name = "good_radio",
         label = "Is it good?", options = c("no", "yes")),
@@ -346,7 +346,7 @@ test_that2("input pipe functions", {
     expect_s3_class(inpt, "trelliscope_input_def")
 
   expect_message(
-    b |>
+    b %>%
       add_inputs(
         input_radio(name = "good_radio", options = 1:5),
         email = "a@b.com",
@@ -360,5 +360,5 @@ test_that2("as_json", {
   expect_error(
     as_json(x),
     regexp = NA # no error
-  ) |> suppressMessages()
+  ) %>% suppressMessages()
 })

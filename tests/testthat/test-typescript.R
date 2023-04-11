@@ -1,7 +1,7 @@
 case_to_string <- function(cls) {
   obj <- cls$as_list()
   obj <- obj[sort(names(obj))]
-  obj |> to_json() |> as.character()
+  obj %>% to_json() %>% as.character()
 }
 path <- system.file("types", package = "trelliscope")
 read_case <- function(obj) {
@@ -17,7 +17,7 @@ test_that2("typescript meta comparison", {
     varname = "numvar",
     digits = 2,
     log = FALSE,
-  ) |> case_to_string()
+  ) %>% case_to_string()
   ts <- read_case(meta_num_min)
   expect_equal(meta_num_min, ts)
 
@@ -28,11 +28,11 @@ test_that2("typescript meta comparison", {
     digits = 2,
     log = FALSE,
     locale = FALSE
-  ) |> case_to_string()
+  ) %>% case_to_string()
   ts <- read_case(meta_num_full)
   expect_equal(meta_num_full, ts)
 
-  meta_string <- StringMeta$new(varname = "stringvar") |>
+  meta_string <- StringMeta$new(varname = "stringvar") %>%
     case_to_string()
   ts <- read_case(meta_string)
   expect_equal(meta_string, ts)
@@ -40,19 +40,19 @@ test_that2("typescript meta comparison", {
   meta_fac <- FactorMeta$new(
     varname = "facvar",
     levels = c("l1", "l2", "l3")
-  ) |> case_to_string()
+  ) %>% case_to_string()
   ts <- read_case(meta_fac)
   expect_equal(meta_fac, ts)
 
-  meta_dt <- DateMeta$new(varname = "datevar") |> case_to_string()
+  meta_dt <- DateMeta$new(varname = "datevar") %>% case_to_string()
   ts <- read_case(meta_dt)
   expect_equal(meta_dt, ts)
 
-  meta_dttm <- DatetimeMeta$new(varname = "datetimevar") |> case_to_string()
+  meta_dttm <- DatetimeMeta$new(varname = "datetimevar") %>% case_to_string()
   ts <- read_case(meta_dttm)
   expect_equal(meta_dttm, ts)
 
-  meta_href <- HrefMeta$new(varname = "hrefvar") |> case_to_string()
+  meta_href <- HrefMeta$new(varname = "hrefvar") %>% case_to_string()
   ts <- read_case(meta_href)
   expect_equal(meta_href, ts)
 
@@ -60,12 +60,12 @@ test_that2("typescript meta comparison", {
     varname = "geovar",
     latvar = "var1",
     longvar = "var2"
-  ) |> case_to_string()
+  ) %>% case_to_string()
   ts <- read_case(meta_geo)
   expect_equal(meta_geo, ts)
 
   meta_grph <- GraphMeta$new(varname = "graphvar", idvarname = "idvar",
-    linkidvarname = "linkidvar", labelvarname = "idvar") |>
+    linkidvarname = "linkidvar", labelvarname = "idvar") %>%
     case_to_string()
   ts <- read_case(meta_grph)
   expect_equal(meta_grph, ts)
@@ -77,32 +77,32 @@ test_that2("typescript meta comparison", {
 test_that2("typescript inputs comparison", {
   options <- c("a", "b", "c")
 
-  input_radio <- RadioInput$new(name = "radio", options = options) |>
+  input_radio <- RadioInput$new(name = "radio", options = options) %>%
     case_to_string()
   ts <- read_case(input_radio)
   expect_equal(input_radio, ts)
 
-  input_check <- CheckboxInput$new(name = "check", options = options) |>
+  input_check <- CheckboxInput$new(name = "check", options = options) %>%
     case_to_string()
   ts <- read_case(input_check)
   expect_equal(input_check, ts)
 
-  input_select <- SelectInput$new(name = "select", options = options) |>
+  input_select <- SelectInput$new(name = "select", options = options) %>%
     case_to_string()
   ts <- read_case(input_select)
   expect_equal(input_select, ts)
 
-  input_mselect <- MultiselectInput$new(name = "mselect", options = options) |>
+  input_mselect <- MultiselectInput$new(name = "mselect", options = options) %>%
     case_to_string()
   ts <- read_case(input_mselect)
   expect_equal(input_mselect, ts)
 
-  input_text <- TextInput$new(name = "text") |>
+  input_text <- TextInput$new(name = "text") %>%
     case_to_string()
   ts <- read_case(input_text)
   expect_equal(input_text, ts)
 
-  input_num <- NumberInput$new(name = "num") |>
+  input_num <- NumberInput$new(name = "num") %>%
     case_to_string()
   ts <- read_case(input_num)
   expect_equal(input_num, ts)
@@ -112,12 +112,12 @@ test_that2("typescript inputs comparison", {
 # states                                                   #
 # -------------------------------------------------------- #
 test_that2("typescript states comparison", {
-  state_layout <- LayoutState$new() |>
+  state_layout <- LayoutState$new() %>%
     case_to_string()
   ts <- read_case(state_layout)
   expect_equal(state_layout, ts)
 
-  state_label <- LabelState$new(varnames = c("a", "b")) |>
+  state_label <- LabelState$new(varnames = c("a", "b")) %>%
     case_to_string()
   ts <- read_case(state_label)
   expect_equal(state_label, ts)
@@ -133,20 +133,20 @@ test_that2("typescript states comparison", {
   ts <- read_case(state_catfilt)
   expect_equal(case_to_string(state_catfilt), ts)
 
-  state_numfilt <- NumberRangeFilterState$new(varname = "a", min = 1) |>
+  state_numfilt <- NumberRangeFilterState$new(varname = "a", min = 1) %>%
     case_to_string()
   ts <- read_case(state_numfilt)
   expect_equal(state_numfilt, ts)
 
   # # need to test these later...
   # state_dtfilt <- DateRangeFilterState$new(
-  #   varname = "a", min = as.Date("2000-01-01")) |>
+  #   varname = "a", min = as.Date("2000-01-01")) %>%
   #   case_to_string()
   # ts <- read_case(state_dtfilt)
   # expect_equal(state_dtfilt, ts)
 
   # state_dttmfilt <- DatetimeRangeFilterState$new(
-  #   varname = "a", min = as.POSIXct(as.Date("2000-01-01"))) |>
+  #   varname = "a", min = as.POSIXct(as.Date("2000-01-01"))) %>%
   #   case_to_string()
   # ts <- read_case(state_dttmfilt)
   # expect_equal(state_dttmfilt, ts)

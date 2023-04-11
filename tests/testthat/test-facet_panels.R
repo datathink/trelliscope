@@ -28,12 +28,12 @@ test_that2("facet_trellisope", {
     "displays/mpg1/displayInfo.jsonp")))
 
   a4 <- (ggplot(aes(hwy, cty), data = mpg2) + geom_point() +
-    facet_panels(~ manufacturer + class)) |>
+    facet_panels(~ manufacturer + class)) %>%
     nest_panels(as_plotly = TRUE, plotly_cfg = list(displaylogo = FALSE))
   expect_s3_class(a4, "data.frame")
   expect_s3_class(a4$panel, "nested_panels")
 
-  a5 <- suppressMessages(as_trelliscope_df(a4, name = "mpg2", path = plotdir) |>
+  a5 <- suppressMessages(as_trelliscope_df(a4, name = "mpg2", path = plotdir) %>%
     write_trelliscope())
   dl <- read_json_p(file.path(plotdir, "displays/displayList.jsonp"))
   expect_true(nrow(dl) == 2)
@@ -47,7 +47,7 @@ test_that2("facet_trellisope", {
 
   # panels auto-build if needed
   a6 <- (ggplot(aes(hwy, cty), data = mpg2) + geom_point() +
-    facet_panels(~ manufacturer + class)) |>
+    facet_panels(~ manufacturer + class)) %>%
     as_trelliscope_df(name = "mpg3", path = plotdir)
 
   # write pngs (with a blank panel)
@@ -65,7 +65,7 @@ test_that2("facet_trellisope", {
 
 test_that2("facet_trellisope scales", {
   a7 <- (ggplot(aes(hwy, cty), data = mpg2) + geom_point() +
-    facet_panels(~ manufacturer + class, scales = c("free", "same"))) |>
+    facet_panels(~ manufacturer + class, scales = c("free", "same"))) %>%
     nest_panels()
   expect_null(get_x_range(a7$panel[[1]]))
   expect_null(get_x_range(a7$panel[[2]]))
@@ -74,7 +74,7 @@ test_that2("facet_trellisope scales", {
     get_y_range(a7$panel[[2]])
   )
   a8 <- (ggplot(aes(hwy, cty), data = mpg2) + geom_point() +
-    facet_panels(~ manufacturer + class, scales = "sliced")) |>
+    facet_panels(~ manufacturer + class, scales = "sliced")) %>%
     nest_panels()
   expect_equal(
     # note: the first panel has the widest range so it doesn't have
@@ -89,13 +89,13 @@ test_that2("facet_trellisope scales", {
 
   expect_error(
     (ggplot(aes(hwy, cty), data = mpg2) + geom_point() +
-      facet_panels(~ manufacturer + class, scales = "stuff")) |>
+      facet_panels(~ manufacturer + class, scales = "stuff")) %>%
       nest_panels(),
     "may only be one of the following"
   )
 
   a9 <- (ggplot(aes(model, trans), data = mpg2) + geom_point() +
-    facet_panels(~ manufacturer + class, scales = c("free", "same"))) |>
+    facet_panels(~ manufacturer + class, scales = c("free", "same"))) %>%
     nest_panels()
   expect_null(get_x_range(a9$panel[[1]]))
   expect_null(get_x_range(a9$panel[[2]]))
@@ -107,7 +107,7 @@ test_that2("facet_trellisope scales", {
   expect_message(
     (ggplot(aes(model, trans), data = mpg2) + geom_point() +
       facet_panels(~ manufacturer + class,
-        scales = c("sliced", "same"))) |>
+        scales = c("sliced", "same"))) %>%
       nest_panels(),
     "does not know how to handle"
   )
@@ -118,7 +118,7 @@ test_that2("facet_trellisope errors/warnings", {
 
   expect_error(
     (ggplot(mapping = aes(hwy, cty)) + geom_line(data = mpg2) +
-      facet_panels(~ z)) |>
+      facet_panels(~ z)) %>%
       nest_panels(),
     "All facet_panels facet columns must be found"
   )
@@ -170,11 +170,11 @@ test_that2("facet_trellisope errors/warnings", {
   #   )
   # )
 
-  # iris |>
-  #   nest(data = !Species) |>
-  #   left_join(iris_imgs, by = "Species") |>
-  #   mutate(img = img_panel(img)) |>
-  #   as_trelliscope_df("iris img", path = plotdir) |>
+  # iris %>%
+  #   nest(data = !Species) %>%
+  #   left_join(iris_imgs, by = "Species") %>%
+  #   mutate(img = img_panel(img)) %>%
+  #   as_trelliscope_df("iris img", path = plotdir) %>%
   #   write_trelliscope()
 
   # panel_path <- "/tmp/test1/displays/iris_img2/panels"
@@ -185,10 +185,10 @@ test_that2("facet_trellisope errors/warnings", {
   # }
   # list.files(panel_path)
 
-  # iris |>
-  #   nest(data = !Species) |>
-  #   mutate(img = img_panel_local(paste0(Species, ".jpg"))) |>
-  #   as_trelliscope_df("iris img2", path = plotdir) |>
+  # iris %>%
+  #   nest(data = !Species) %>%
+  #   mutate(img = img_panel_local(paste0(Species, ".jpg"))) %>%
+  #   as_trelliscope_df("iris img2", path = plotdir) %>%
   #   write_trelliscope()
   # # TODO: make sure this checks that the panels are there...
 
@@ -204,20 +204,20 @@ test_that2("facet_trellisope errors/warnings", {
   # b1 <- nest_panels(a, panel_col = "pnl", data_col = "dat",
   #   unnest_cols = c("pnl", "xtra"))
 
-  # b2 <- nest_panels(a, as_plotly = TRUE) |>
-  #   as_trelliscope_df(name = "mpg", path = "/tmp/test2") |>
+  # b2 <- nest_panels(a, as_plotly = TRUE) %>%
+  #   as_trelliscope_df(name = "mpg", path = "/tmp/test2") %>%
   #   write_panels()
   # b2$panels_written
   # list.files(file.path(b2$path, "displays", "mpg", "panels"))
 
-  # b3 <- nest_panels(a) |>
-  #   as_trelliscope_df(name = "mpg", path = "/tmp/test3") |>
+  # b3 <- nest_panels(a) %>%
+  #   as_trelliscope_df(name = "mpg", path = "/tmp/test3") %>%
   #   write_panels()
   # b3$panels_written
   # list.files(file.path(b3$path, "displays", "mpg", "panels"))
 
-  # b4 <- nest_panels(a) |>
-  #   as_trelliscope_df(name = "mpg", path = "/tmp/test4") |>
+  # b4 <- nest_panels(a) %>%
+  #   as_trelliscope_df(name = "mpg", path = "/tmp/test4") %>%
   #   write_panels(format = "svg")
   # b4$panels_written
   # list.files(file.path(b4$path, "displays", "mpg", "panels"))
@@ -228,8 +228,8 @@ test_that2("facet_trellisope errors/warnings", {
   # # should error
   # b3 <- nest_panels(a, unnest_cols = c("xtra2"))
 
-  # b4 <- ggplot2::mpg |>
-  #   tidyr::nest(data = !dplyr::one_of(c("manufacturer", "class"))) |>
+  # b4 <- ggplot2::mpg %>%
+  #   tidyr::nest(data = !dplyr::one_of(c("manufacturer", "class"))) %>%
   #   dplyr::mutate(panel = map_plot(data, function(x) {
   #     ggplot2::ggplot(aes(hwy, cty), data = x) geom_point() +
   #   }))

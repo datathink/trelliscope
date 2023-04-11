@@ -128,7 +128,7 @@ read_json_p <- function(f) {
   if (grepl("json$", f)) {
     res <- jsonlite::fromJSON(gsub(rgxp, "\\1", tmp))
   } else if (grepl("jsonp$", f)) {
-    tmp <- readLines(f, warn = FALSE) |> paste(collapse = "\n")
+    tmp <- readLines(f, warn = FALSE) %>% paste(collapse = "\n")
     rgxp <- paste0("^__[a-zA-Z]+__[a-zA-Z0-9_/\\.]+\\((.*)\\)")
     res <- jsonlite::fromJSON(gsub(rgxp, "\\1", tmp))
   }

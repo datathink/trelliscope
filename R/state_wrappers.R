@@ -12,7 +12,7 @@ state_layout <- function(
 ) {
   LayoutState$new(
     ncol = ncol, page = 1
-  ) |>
+  ) %>%
   add_state_class()
 }
 
@@ -22,7 +22,7 @@ state_layout <- function(
 #' when viewing the display.
 #' @export
 state_labels <- function(varnames = NULL) {
-  LabelState$new(varnames = varnames) |>
+  LabelState$new(varnames = varnames) %>%
   add_state_class()
 }
 
@@ -31,7 +31,7 @@ state_labels <- function(varnames = NULL) {
 #' @param dir One of "asc" or "desc", describing the direction of the sort.
 #' @export
 state_sort <- function(varname, dir = "asc") {
-  SortState$new(varname = varname, dir = dir) |>
+  SortState$new(varname = varname, dir = dir) %>%
   add_state_class()
 }
 
@@ -45,7 +45,7 @@ state_sort <- function(varname, dir = "asc") {
 #' @export
 filter_string <- function(varname, regexp = NULL, values = NULL) {
   CategoryFilterState$new(varname = varname,
-    regexp = regexp, values = values) |>
+    regexp = regexp, values = values) %>%
   add_state_class(extra = "trelliscope_filter_def")
 }
 

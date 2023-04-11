@@ -30,7 +30,7 @@ num <- meta_number(
   locale = TRUE
 )
 
-list_diff(num$as_list(), meta$as_list()) |>
+list_diff(num$as_list(), meta$as_list()) %>%
   to_json(pretty = TRUE)
 # {
 #   "locale": true,
@@ -43,7 +43,7 @@ fac <- meta_factor(
   tags = c("a", "b", "c"),
   levels = c("asdf", "qwerty")
 )
-list_diff(fac$as_list(), meta$as_list()) |>
+list_diff(fac$as_list(), meta$as_list()) %>%
   to_json(pretty = TRUE)
 # {
 #   "levels": ["asdf", "qwerty"]
@@ -54,7 +54,7 @@ chr <- meta_string(
   label = "test label",
   tags = c("a", "b", "c")
 )
-list_diff(chr$as_list(), meta$as_list()) |>
+list_diff(chr$as_list(), meta$as_list()) %>%
   to_json(pretty = TRUE)
 # {}
 
@@ -63,7 +63,7 @@ dte <- meta_date(
   label = "test label",
   tags = c("a", "b", "c")
 )
-list_diff(dte$as_list(), meta$as_list()) |>
+list_diff(dte$as_list(), meta$as_list()) %>%
   to_json(pretty = TRUE)
 # {}
 
@@ -72,7 +72,7 @@ dtt <- meta_datetime(
   label = "test label",
   tags = c("a", "b", "c")
 )
-list_diff(dtt$as_list(), meta$as_list()) |>
+list_diff(dtt$as_list(), meta$as_list()) %>%
   to_json(pretty = TRUE)
 # {
 #   "timezone": "UTC"
@@ -83,7 +83,7 @@ hrf <- meta_href(
   label = "test label",
   tags = c("a", "b", "c")
 )
-list_diff(hrf$as_list(), meta$as_list()) |>
+list_diff(hrf$as_list(), meta$as_list()) %>%
   to_json(pretty = TRUE)
 # {}
 
@@ -94,7 +94,7 @@ geo <- meta_geo(
   label = "test label",
   tags = c("a", "b", "c")
 )
-list_diff(geo$as_list(), meta$as_list()) |>
+list_diff(geo$as_list(), meta$as_list()) %>%
   to_json(pretty = TRUE)
 # {}
 
@@ -105,7 +105,7 @@ grp <- meta_graph(
   idvarname = "idvar",
   direction = "none"
 )
-list_diff(grp$as_list(), meta$as_list()) |>
+list_diff(grp$as_list(), meta$as_list()) %>%
   to_json(pretty = TRUE)
 # {
 #   "direction": "none",

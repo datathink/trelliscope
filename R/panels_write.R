@@ -55,6 +55,7 @@ write_panels <- function(
   cur_hash <- rlang::hash(c(height, width, format, trdf[[panel_col]]))
 
   trdf[["__PANEL_KEY__"]] <- panel_keys
+  class(trdf) <- unique(c("trelliscope", class(trdf)))
   if (is.null(trobj$get("keysig")))
     trobj$set("keysig", rlang::hash(sort(panel_keys)))
 

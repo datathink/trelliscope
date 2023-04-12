@@ -56,6 +56,7 @@ write_panels <- function(
 
   trdf[["__PANEL_KEY__"]] <- panel_keys
   class(trdf) <- unique(c("trelliscope", class(trdf)))
+
   if (is.null(trobj$get("keysig")))
     trobj$set("keysig", rlang::hash(sort(panel_keys)))
 
@@ -99,7 +100,7 @@ write_panels <- function(
   trobj$panels_written <- TRUE
   trobj$set("panelaspect", width / height)
 
-  attr(trdf, "trelliscope") <- trobj
+  # attr(trdf, "trelliscope") <- trobj
   trdf
 }
 
